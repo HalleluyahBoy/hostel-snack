@@ -56,11 +56,14 @@ function showNoProducts() {
 // API Functions
 async function fetchProducts() {
   try {
+    console.log("Fetching products from:", `${API_BASE_URL}/products/`);
     const response = await fetch(`${API_BASE_URL}/products/`);
+    console.log("Products response status:", response.status);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
+    console.log("Products data received:", data);
     return data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -70,11 +73,14 @@ async function fetchProducts() {
 
 async function fetchCategories() {
   try {
+    console.log("Fetching categories from:", `${API_BASE_URL}/categories/`);
     const response = await fetch(`${API_BASE_URL}/categories/`);
+    console.log("Categories response status:", response.status);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
+    console.log("Categories data received:", data);
     return data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -259,24 +265,31 @@ function setupEventListeners() {
 // Initialization
 async function init() {
   try {
+    console.log("Starting app initialization...");
     showLoading();
 
+    console.log("Fetching data from API...");
     // Fetch data in parallel
     const [productsData, categoriesData] = await Promise.all([
       fetchProducts(),
       fetchCategories(),
     ]);
 
+    console.log("Products data:", productsData);
+    console.log("Categories data:", categoriesData);
+
     allProducts = productsData;
     allCategories = categoriesData;
     filteredProducts = [...allProducts];
 
+    console.log("Rendering UI...");
     // Render UI
     renderCategories();
     renderProducts(filteredProducts);
 
     // Setup event listeners
     setupEventListeners();
+    console.log("App initialization complete!");
   } catch (error) {
     console.error("Error initializing app:", error);
     showError();
