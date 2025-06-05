@@ -16,6 +16,16 @@ const noProductsElement = document.getElementById("no-products");
 const categoriesContainer = document.getElementById("categories-container");
 const searchInput = document.getElementById("search-input");
 
+// Check if all DOM elements exist
+console.log("DOM Elements check:", {
+  loading: !!loadingElement,
+  error: !!errorElement,
+  productsGrid: !!productsGrid,
+  noProducts: !!noProductsElement,
+  categories: !!categoriesContainer,
+  search: !!searchInput,
+});
+
 // Utility Functions
 function showElement(element) {
   element.classList.remove("hidden");
@@ -64,7 +74,8 @@ async function fetchProducts() {
     }
     const data = await response.json();
     console.log("Products data received:", data);
-    return data;
+    // Extract the results array from the paginated response
+    return data.results || data;
   } catch (error) {
     console.error("Error fetching products:", error);
     throw error;
@@ -81,7 +92,8 @@ async function fetchCategories() {
     }
     const data = await response.json();
     console.log("Categories data received:", data);
-    return data;
+    // Extract the results array from the paginated response
+    return data.results || data;
   } catch (error) {
     console.error("Error fetching categories:", error);
     throw error;

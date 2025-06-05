@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Frontend API Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <h1 class="text-2xl font-bold mb-4">Frontend API Test</h1>
+    <div id="status" class="mb-4"></div>
+    <div
+      id="products-container"
+      class="grid grid-cols-1 md:grid-cols-3 gap-4"
+    ></div>
+
+    <script>
+      const API_BASE_URL = "http://127.0.0.1:8001/api";
+
+      async function testAPI() {
+        try {
+          document.getElementById("status").innerHTML =
+            '<p class="text-blue-600">Loading...</p>';
+
+          console.log("Testing API...");
+          const response = await fetch(`${API_BASE_URL}/products/`);
+          console.log("Response status:", response.status);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          console.log("Raw data:", data);
+
+          // Extract products from paginated response
+          const products = data.results || data;
+          console.log("Products:", products);
+
+          // Display status
+          document.getElementById(
+            "status"
+          ).innerHTML = `<p class="text-green-600">Success! Found ${products.length} products</p>`;
+
+          // Display products
+          const container = document.getElementById("products-container");
+          container.innerHTML = products
+            .map(
+              (product) => `
+                <div class="bg-white p-4 rounded shadow">
+                    <h3 class="font-bold">${product.name}</h3>
+                    <p class="text-gray-600">${
+                      product.description || "No description"
+                    }</p>
+                    <p class="text-green-600 font-semibold">$${
+                      product.price
+                    }</p>
+                </div>
+            `
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById(
+            "status"
+          ).innerHTML = `<p class="text-red-600">Error: ${error.message}</p>`;
+        }
+      }
+
+      // Run test when page loads
+      document.addEventListener("DOMContentLoaded", testAPI);
+    </script>
+  </body>
+</html>
