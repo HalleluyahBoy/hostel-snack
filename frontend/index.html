@@ -101,6 +101,7 @@
       <div class="max-w-7xl mx-auto px-4 py-6">
         <div class="relative">
           <input
+            id="search-input"
             type="text"
             placeholder="Search for snacks..."
             class="w-full h-12 pl-12 pr-4 rounded-xl border border-gray-200 search-input focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
@@ -124,346 +125,88 @@
 
       <!-- Categories -->
       <div class="max-w-7xl mx-auto px-4 pb-6">
-        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-          <button
-            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 text-yellow-500"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-              />
-            </svg>
-            <span>All Snacks</span>
-          </button>
-          <button
-            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
-          >
-            <span>Chips & Crisps</span>
-          </button>
-          <button
-            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
-          >
-            <span>Chocolates</span>
-          </button>
-          <button
-            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
-          >
-            <span>Biscuits</span>
-          </button>
-          <button
-            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
-          >
-            <span>Healthy Snacks</span>
-          </button>
+        <div
+          id="categories-container"
+          class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
+        >
+          <!-- Categories will be loaded dynamically -->
         </div>
       </div>
 
       <!-- Products Grid -->
       <div class="max-w-7xl mx-auto px-4 pb-24">
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          <!-- Product Cards -->
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491432711/bingo-original-style-chilli-sprinkled-potato-chips-52-g-product-images-o491432711-p491432711-0-202203150627.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Bingo Chips"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹1.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Bingo Chips</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Chilli Sprinkled</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
+        <!-- Loading indicator -->
+        <div id="loading" class="text-center py-8">
+          <div class="inline-flex items-center gap-2">
+            <svg
+              class="animate-spin h-5 w-5 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span class="text-gray-600">Loading products...</span>
           </div>
+        </div>
 
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491187257/parle-monaco-classic-regular-salted-crack-150-g-product-images-o491187257-p491187257-0-202203150534.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Monaco Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+        <!-- Error message -->
+        <div id="error" class="hidden text-center py-8">
+          <div class="text-red-600">
+            <svg
+              class="h-8 w-8 mx-auto mb-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹2.49</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Monaco Biscuits</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Salted Crackers</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
+            </svg>
+            <p>Failed to load products. Please try again later.</p>
           </div>
+        </div>
 
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491419493/bingo-yumitos-original-style-salt-sprinkled-potato-chips-52-g-product-images-o491419493-p491419493-0-202203150627.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Bingo Yumitos"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹1.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Bingo Yumitos</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Salt Sprinkled</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
+        <!-- Products grid container -->
+        <div
+          id="products-grid"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 hidden"
+        >
+          <!-- Product cards will be inserted here dynamically -->
+        </div>
 
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/490008739/britannia-good-day-cashew-cookies-200-g-product-images-o490008739-p490008739-0-202203150816.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Good Day Cookies"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+        <!-- No products message -->
+        <div id="no-products" class="hidden text-center py-8">
+          <div class="text-gray-500">
+            <svg
+              class="h-8 w-8 mx-auto mb-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-4h-2m-5-4h2m-3-2h2"
               />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹3.49</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Good Day</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Cashew Cookies</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491432710/bingo-original-style-cream-and-onion-potato-chips-52-g-product-images-o491432710-p491432710-0-202203150627.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Bingo Chips Cream & Onion"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹1.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Bingo Chips</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Cream & Onion</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491551493/parle-hide-seek-chocolate-chip-cookies-200-g-product-images-o491551493-p491551493-0-202203151515.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Hide & Seek Cookies"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹2.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Hide & Seek</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Chocolate Chip Cookies</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/490008754/britannia-bourbon-chocolate-cream-biscuits-150-g-product-images-o490008754-p490008754-0-202203150748.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Bourbon Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹1.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Bourbon</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Chocolate Cream</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/490008752/britannia-marie-gold-biscuits-250-g-product-images-o490008752-p490008752-0-202203150340.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Marie Gold Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹2.49</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Marie Gold</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Classic Biscuits</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491432655/sunfeast-dark-fantasy-bourbon-vanilla-cream-biscuits-150-g-product-images-o491432655-p491432655-0-202203151621.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Dark Fantasy Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"></div>
-                <span class="font-semibold">₹2.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Dark Fantasy</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Bourbon Vanilla</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/490005197/parle-g-original-glucose-biscuits-800-g-product-images-o490005197-p490005197-0-202203150432.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Parle-G Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹1.49</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Parle-G</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Original Glucose</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/490008771/britannia-nutrichoice-digestive-high-fibre-biscuits-1-kg-product-images-o490008771-p490008771-0-202203150557.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Nutri Choice Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹3.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Nutri Choice</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Digestive Biscuits</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/490008738/britannia-little-hearts-classic-sweet-n-salty-biscuits-75-g-product-images-o490008738-p490008738-0-202203150748.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Little Hearts Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹1.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Little Hearts</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Sweet & Salty</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card rounded-xl overflow-hidden">
-            <div class="aspect-square relative overflow-hidden bg-gray-50">
-              <img
-                src="https://www.jiomart.com/images/product/original/491187301/oreo-original-vanilla-creme-biscuits-300-g-product-images-o491187301-p491187301-0-202203151356.jpg"
-                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
-                alt="Oreo Biscuits"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
-              />
-              <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
-                <span class="font-semibold">₹2.99</span>
-              </div>
-              <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            </div>
-            <div class="p-4">
-              <h3 class="font-semibold text-gray-900 line-clamp-1">Oreo</h3>
-              <p class="text-sm text-gray-500 mt-1 line-clamp-1">Vanilla Creme</p>
-              <button class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700">
-                Add to Cart
-              </button>
-            </div>
+            </svg>
+            <p>No products found.</p>
           </div>
         </div>
       </div>
@@ -490,5 +233,8 @@
         </button>
       </div>
     </div>
+
+    <!-- Include JavaScript -->
+    <script src="script.js"></script>
   </body>
 </html>
