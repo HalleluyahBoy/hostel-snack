@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Complete Integration Test</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-8">Complete Integration Test</h1>
+
+      <div class="mb-4 space-x-2">
+        <button
+          onclick="runTest()"
+          class="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Run Full Test
+        </button>
+        <button
+          onclick="clearLog()"
+          class="bg-gray-500 text-white px-4 py-2 rounded"
+        >
+          Clear Log
+        </button>
+      </div>
+
+      <!-- Log area -->
+      <div
+        id="log"
+        class="mb-8 p-4 bg-white rounded border max-h-48 overflow-y-auto font-mono text-sm"
+      ></div>
+
+      <!-- Loading State -->
+      <div id="loading" class="text-center py-8">
+        <div
+          class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"
+        ></div>
+        <p class="mt-4 text-gray-600">Loading products...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error" class="hidden text-center py-8">
+        <div class="text-red-500 text-xl">❌ Failed to load products</div>
+        <p class="text-gray-600 mt-2">Please check the API connection</p>
+      </div>
+
+      <!-- Categories -->
+      <div class="mb-8">
+        <h2 class="text-xl font-semibold mb-4">Categories</h2>
+        <div id="categories-container" class="flex gap-2 flex-wrap">
+          <!-- Categories will be inserted here -->
+        </div>
+      </div>
+
+      <!-- Products grid -->
+      <div
+        id="products-grid"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 hidden"
+      >
+        <!-- Product cards will be inserted here -->
+      </div>
+
+      <!-- No products -->
+      <div id="no-products" class="hidden text-center py-8">
+        <p class="text-gray-600">No products found</p>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE_URL = "http://127.0.0.1:8001/api";
+      let allProducts = [];
+      let allCategories = [];
+
+      function log(message) {
+        const logElement = document.getElementById("log");
+        const timestamp = new Date().toLocaleTimeString();
+        logElement.innerHTML += `[${timestamp}] ${message}<br>`;
+        logElement.scrollTop = logElement.scrollHeight;
+        console.log(message);
+      }
+
+      function clearLog() {
+        document.getElementById("log").innerHTML = "";
+      }
+
+      function showElement(element) {
+        if (element) {
+          log(`Showing element: ${element.id}`);
+          element.classList.remove("hidden");
+        } else {
+          log("Attempted to show null element");
+        }
+      }
+
+      function hideElement(element) {
+        if (element) {
+          log(`Hiding element: ${element.id}`);
+          element.classList.add("hidden");
+        } else {
+          log("Attempted to hide null element");
+        }
+      }
+
+      function showLoading() {
+        const loadingElement = document.getElementById("loading");
+        const errorElement = document.getElementById("error");
+        const productsGrid = document.getElementById("products-grid");
+        const noProductsElement = document.getElementById("no-products");
+
+        showElement(loadingElement);
+        hideElement(errorElement);
+        hideElement(productsGrid);
+        hideElement(noProductsElement);
+      }
+
+      function showError() {
+        const loadingElement = document.getElementById("loading");
+        const errorElement = document.getElementById("error");
+        const productsGrid = document.getElementById("products-grid");
+        const noProductsElement = document.getElementById("no-products");
+
+        hideElement(loadingElement);
+        showElement(errorElement);
+        hideElement(productsGrid);
+        hideElement(noProductsElement);
+      }
+
+      function showProducts() {
+        const loadingElement = document.getElementById("loading");
+        const errorElement = document.getElementById("error");
+        const productsGrid = document.getElementById("products-grid");
+        const noProductsElement = document.getElementById("no-products");
+
+        hideElement(loadingElement);
+        hideElement(errorElement);
+        showElement(productsGrid);
+        hideElement(noProductsElement);
+      }
+
+      async function fetchProducts() {
+        try {
+          log("Fetching products from API...");
+          const response = await fetch(`${API_BASE_URL}/products/`);
+          log(`Products response status: ${response.status}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          log(
+            `Products data received! Count: ${data.count}, Results: ${
+              data.results?.length || 0
+            }`
+          );
+          return data.results || data;
+        } catch (error) {
+          log(`Error fetching products: ${error.message}`);
+          throw error;
+        }
+      }
+
+      async function fetchCategories() {
+        try {
+          log("Fetching categories from API...");
+          const response = await fetch(`${API_BASE_URL}/categories/`);
+          log(`Categories response status: ${response.status}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          log(
+            `Categories data received! Count: ${data.count}, Results: ${
+              data.results?.length || 0
+            }`
+          );
+          return data.results || data;
+        } catch (error) {
+          log(`Error fetching categories: ${error.message}`);
+          throw error;
+        }
+      }
+
+      function createProductCard(product) {
+        const productCard = document.createElement("div");
+        productCard.className =
+          "product-card rounded-xl overflow-hidden group bg-white border border-gray-200";
+
+        const imageUrl =
+          product.image ||
+          "https://via.placeholder.com/400x400?text=Snack+Image";
+
+        productCard.innerHTML = `
+                <div class="aspect-square relative overflow-hidden bg-gray-50">
+                    <img
+                        src="${imageUrl}"
+                        class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                        alt="${product.name}"
+                        loading="lazy"
+                        onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+                    />
+                    <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm">
+                        <span class="font-semibold">₹${parseFloat(
+                          product.price
+                        ).toFixed(2)}</span>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-900 line-clamp-1">${
+                      product.name
+                    }</h3>
+                    <p class="text-sm text-gray-500 mt-1 line-clamp-1">${
+                      product.description || "Delicious snack"
+                    }</p>
+                    <button 
+                        class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
+                        onclick="alert('Added ${product.name} to cart!')"
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            `;
+
+        return productCard;
+      }
+
+      function createCategoryButton(category, isActive = false) {
+        const button = document.createElement("button");
+        button.className = `category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap ${
+          isActive ? "bg-blue-50 border-blue-300 text-blue-700" : ""
+        }`;
+
+        if (category === null) {
+          button.innerHTML = `<span>All Snacks</span>`;
+        } else {
+          button.innerHTML = `<span>${category.name}</span>`;
+        }
+
+        return button;
+      }
+
+      function renderProducts(products) {
+        log(`Rendering ${products.length} products`);
+        const productsGrid = document.getElementById("products-grid");
+
+        if (!productsGrid) {
+          log("ERROR: Products grid element not found!");
+          return;
+        }
+
+        productsGrid.innerHTML = "";
+
+        if (products.length === 0) {
+          log("No products to render, showing no-products message");
+          showElement(document.getElementById("no-products"));
+          return;
+        }
+
+        products.forEach((product, index) => {
+          const productCard = createProductCard(product);
+          productsGrid.appendChild(productCard);
+          log(`Added product ${index + 1}: ${product.name}`);
+        });
+
+        log("All products rendered, showing products grid");
+        showProducts();
+      }
+
+      function renderCategories() {
+        log(`Rendering ${allCategories.length} categories`);
+        const categoriesContainer = document.getElementById(
+          "categories-container"
+        );
+
+        if (!categoriesContainer) {
+          log("ERROR: Categories container element not found!");
+          return;
+        }
+
+        categoriesContainer.innerHTML = "";
+
+        // Add "All Snacks" button
+        const allButton = createCategoryButton(null, true);
+        categoriesContainer.appendChild(allButton);
+
+        // Add category buttons
+        allCategories.forEach((category) => {
+          const button = createCategoryButton(category, false);
+          categoriesContainer.appendChild(button);
+        });
+
+        log("Categories rendered successfully");
+      }
+
+      async function runTest() {
+        try {
+          log("=== Starting complete integration test ===");
+
+          log("Initializing DOM elements...");
+          const loadingElement = document.getElementById("loading");
+          const errorElement = document.getElementById("error");
+          const productsGrid = document.getElementById("products-grid");
+          const noProductsElement = document.getElementById("no-products");
+          const categoriesContainer = document.getElementById(
+            "categories-container"
+          );
+
+          log(`DOM Elements check:
+                  - loading: ${!!loadingElement}
+                  - error: ${!!errorElement}
+                  - productsGrid: ${!!productsGrid}
+                  - noProducts: ${!!noProductsElement}
+                  - categories: ${!!categoriesContainer}`);
+
+          if (productsGrid) {
+            log(`Products grid classes: ${productsGrid.className}`);
+          }
+
+          showLoading();
+
+          log("Fetching data from API...");
+          const [productsData, categoriesData] = await Promise.all([
+            fetchProducts(),
+            fetchCategories(),
+          ]);
+
+          allProducts = productsData;
+          allCategories = categoriesData;
+
+          log("Rendering UI...");
+          renderCategories();
+          renderProducts(allProducts);
+
+          log("=== Test completed successfully! ===");
+        } catch (error) {
+          log(`ERROR during test: ${error.message}`);
+          showError();
+        }
+      }
+
+      // Auto-run test on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        log("Page loaded, auto-running test in 1 second...");
+        setTimeout(runTest, 1000);
+      });
+    </script>
+  </body>
+</html>

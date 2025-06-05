@@ -4,35 +4,22 @@ const API_BASE_URL = "http://127.0.0.1:8001/api";
 // Global state
 let allProducts = [];
 let allCategories = [];
-let filteredProducts = [];
-let currentCategory = null;
-let searchQuery = "";
 
-// DOM Elements
-const loadingElement = document.getElementById("loading");
-const errorElement = document.getElementById("error");
-const productsGrid = document.getElementById("products-grid");
-const noProductsElement = document.getElementById("no-products");
-const categoriesContainer = document.getElementById("categories-container");
-const searchInput = document.getElementById("search-input");
-
-// Check if all DOM elements exist
-console.log("DOM Elements check:", {
-  loading: !!loadingElement,
-  error: !!errorElement,
-  productsGrid: !!productsGrid,
-  noProducts: !!noProductsElement,
-  categories: !!categoriesContainer,
-  search: !!searchInput,
-});
+// DOM Elements (will be initialized in init function)
+let loadingElement;
+let errorElement;
+let productsGrid;
+let noProductsElement;
+let categoriesContainer;
+let searchInput;
 
 // Utility Functions
 function showElement(element) {
-  element.classList.remove("hidden");
+  if (element) element.classList.remove("hidden");
 }
 
 function hideElement(element) {
-  element.classList.add("hidden");
+  if (element) element.classList.add("hidden");
 }
 
 function showLoading() {
@@ -54,13 +41,6 @@ function showProducts() {
   hideElement(errorElement);
   showElement(productsGrid);
   hideElement(noProductsElement);
-}
-
-function showNoProducts() {
-  hideElement(loadingElement);
-  hideElement(errorElement);
-  hideElement(productsGrid);
-  showElement(noProductsElement);
 }
 
 // API Functions
@@ -103,7 +83,8 @@ async function fetchCategories() {
 // Product Card Creation
 function createProductCard(product) {
   const productCard = document.createElement("div");
-  productCard.className = "product-card rounded-xl overflow-hidden group";
+  productCard.className =
+    "product-card rounded-xl overflow-hidden group bg-white border border-gray-200";
 
   // Handle image fallback
   const imageUrl =
@@ -123,7 +104,6 @@ function createProductCard(product) {
                   product.price
                 ).toFixed(2)}</span>
             </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </div>
         <div class="p-4">
             <h3 class="font-semibold text-gray-900 line-clamp-1">${
@@ -133,7 +113,7 @@ function createProductCard(product) {
               product.description || "Delicious snack"
             }</p>
             <button 
-                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition"
                 onclick="addToCart(${product.id})"
             >
                 Add to Cart
@@ -150,22 +130,9 @@ function createCategoryButton(category, isActive = false) {
   button.className = `category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap ${
     isActive ? "bg-blue-50 border-blue-300 text-blue-700" : ""
   }`;
-  button.onclick = () => filterByCategory(category);
 
   if (category === null) {
-    button.innerHTML = `
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 text-yellow-500"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-            >
-                <path
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                />
-            </svg>
-            <span>All Snacks</span>
-        `;
+    button.innerHTML = `<span>All Snacks</span>`;
   } else {
     button.innerHTML = `<span>${category.name}</span>`;
   }
@@ -175,10 +142,13 @@ function createCategoryButton(category, isActive = false) {
 
 // Rendering Functions
 function renderProducts(products) {
+  console.log("Rendering", products.length, "products");
+  if (!productsGrid) return;
+
   productsGrid.innerHTML = "";
 
   if (products.length === 0) {
-    showNoProducts();
+    showElement(noProductsElement);
     return;
   }
 
@@ -191,93 +161,53 @@ function renderProducts(products) {
 }
 
 function renderCategories() {
+  if (!categoriesContainer) return;
+
   categoriesContainer.innerHTML = "";
 
   // Add "All Snacks" button
-  const allButton = createCategoryButton(null, currentCategory === null);
+  const allButton = createCategoryButton(null, true);
   categoriesContainer.appendChild(allButton);
 
   // Add category buttons
   allCategories.forEach((category) => {
-    const button = createCategoryButton(
-      category,
-      currentCategory && currentCategory.id === category.id
-    );
+    const button = createCategoryButton(category, false);
     categoriesContainer.appendChild(button);
   });
 }
 
-// Filtering Functions
-function filterProducts() {
-  let filtered = [...allProducts];
-
-  // Filter by category
-  if (currentCategory) {
-    filtered = filtered.filter(
-      (product) => product.category === currentCategory.id
-    );
-  }
-
-  // Filter by search query
-  if (searchQuery.trim()) {
-    const query = searchQuery.toLowerCase().trim();
-    filtered = filtered.filter(
-      (product) =>
-        product.name.toLowerCase().includes(query) ||
-        (product.description &&
-          product.description.toLowerCase().includes(query))
-    );
-  }
-
-  filteredProducts = filtered;
-  renderProducts(filteredProducts);
-}
-
-function filterByCategory(category) {
-  currentCategory = category;
-  renderCategories();
-  filterProducts();
-}
-
-function searchProducts(query) {
-  searchQuery = query;
-  filterProducts();
-}
-
 // Cart Functions (placeholder)
 function addToCart(productId) {
-  // This is a placeholder function
-  // In a real application, you would implement cart functionality
   console.log(`Adding product ${productId} to cart`);
-
-  // Show a simple notification
   const product = allProducts.find((p) => p.id === productId);
   if (product) {
     alert(`Added "${product.name}" to cart!`);
   }
 }
 
-// Event Listeners
-function setupEventListeners() {
-  // Search functionality
-  searchInput.addEventListener("input", (e) => {
-    searchProducts(e.target.value);
-  });
-
-  // Debounce search for better performance
-  let searchTimeout;
-  searchInput.addEventListener("input", (e) => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      searchProducts(e.target.value);
-    }, 300);
-  });
-}
-
 // Initialization
 async function init() {
   try {
     console.log("Starting app initialization...");
+
+    // Initialize DOM elements
+    loadingElement = document.getElementById("loading");
+    errorElement = document.getElementById("error");
+    productsGrid = document.getElementById("products-grid");
+    noProductsElement = document.getElementById("no-products");
+    categoriesContainer = document.getElementById("categories-container");
+    searchInput = document.getElementById("search-input");
+
+    // Check if all DOM elements exist
+    console.log("DOM Elements found:", {
+      loading: !!loadingElement,
+      error: !!errorElement,
+      productsGrid: !!productsGrid,
+      noProducts: !!noProductsElement,
+      categories: !!categoriesContainer,
+      search: !!searchInput,
+    });
+
     showLoading();
 
     console.log("Fetching data from API...");
@@ -292,15 +222,12 @@ async function init() {
 
     allProducts = productsData;
     allCategories = categoriesData;
-    filteredProducts = [...allProducts];
 
     console.log("Rendering UI...");
     // Render UI
     renderCategories();
-    renderProducts(filteredProducts);
+    renderProducts(allProducts);
 
-    // Setup event listeners
-    setupEventListeners();
     console.log("App initialization complete!");
   } catch (error) {
     console.error("Error initializing app:", error);
