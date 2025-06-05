@@ -12,13 +12,45 @@
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+      .product-card {
+        transition: transform 0.2s ease-in-out;
+      }
+      .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      }
+      .price-tag {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 4px 8px;
+        border-radius: 8px;
+      }
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+      }
+      .store-container {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        margin: 0.5rem;
+        border-radius: 1rem;
+      }
+      .search-container {
+        background: rgba(244, 242, 240, 0.9);
+        backdrop-filter: blur(4px);
+      }
+    </style>
   </head>
   <body>
     <div
-      class="relative flex size-full min-h-screen flex-col bg-white justify-between group/design-root overflow-x-hidden"
+      class="relative flex size-full min-h-screen flex-col bg-gradient-to-br from-[#f5f7fa] to-[#e4e8eb] justify-between group/design-root overflow-x-hidden"
       style="font-family: 'Plus Jakarta Sans', 'Noto Sans', sans-serif"
     >
-      <div>
+      <div class="store-container">
         <div class="flex items-center bg-white p-4 pb-2 justify-between">
           <h2
             class="text-[#181411] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12"
@@ -52,12 +84,11 @@
         </div>
         <div class="px-4 py-3">
           <label class="flex flex-col min-w-40 h-12 w-full">
-            <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+            <div
+              class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-sm hover:shadow transition-shadow search-container"
+            >
               <div
                 class="text-[#887563] flex border-none bg-[#f4f2f0] items-center justify-center pl-4 rounded-l-xl border-r-0"
-                data-icon="MagnifyingGlass"
-                data-size="24px"
-                data-weight="regular"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -73,15 +104,15 @@
               </div>
               <input
                 placeholder="Search for snacks"
-                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#181411] focus:outline-0 focus:ring-0 border-none bg-[#f4f2f0] focus:border-none h-full placeholder:text-[#887563] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#181411] focus:outline-0 focus:ring-1 focus:ring-[#181411] border-none bg-[#f4f2f0] focus:border-none h-full placeholder:text-[#887563] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
                 value=""
               />
             </div>
           </label>
         </div>
-        <div class="flex gap-3 p-3 overflow-x-hidden">
+        <div class="flex gap-3 p-3 overflow-x-auto">
           <button
-            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#f4f2f0] pl-4 pr-2"
+            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#f4f2f0] pl-4 pr-2 hover:bg-[#e5e2e0] transition-colors"
           >
             <p class="text-[#181411] text-sm font-medium leading-normal">
               Chips
@@ -106,7 +137,7 @@
             </div>
           </button>
           <button
-            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#f4f2f0] pl-4 pr-2"
+            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#f4f2f0] pl-4 pr-2 hover:bg-[#e5e2e0] transition-colors"
           >
             <p class="text-[#181411] text-sm font-medium leading-normal">
               Chocolates
@@ -131,7 +162,7 @@
             </div>
           </button>
           <button
-            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#f4f2f0] pl-4 pr-2"
+            class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-[#f4f2f0] pl-4 pr-2 hover:bg-[#e5e2e0] transition-colors"
           >
             <p class="text-[#181411] text-sm font-medium leading-normal">
               Healthy Snacks
@@ -159,20 +190,31 @@
         <div
           class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4"
         >
-          <div class="flex flex-col gap-3 pb-3">
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
             <div
-              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
               style="
                 background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDb9hitiW-ZcZbZLuOTkby0z5e3uM8kwnLyO6qXo-Onjpty-t0a4igTMYXasFmAB95Eg4KYz_YDP2hkPbooQJy34sfomwoEBcX-2DUPfqCewn0aVfwipgv2MMbvNP7fHkoCq67XZgk7UbCTHCmuZSGi2-ch0BHMPsaNmFLZjCp4rWPhRarig3fX8Q4X6Ux645Ig9NQG8FKhv76cu_grOHyXSSlqnzSzOfYpMDIDdEPof27cqTWxKY7LhUCbamtiQ_VNXVVHRyu6Kqvt');
               "
-            ></div>
-            <div>
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹2.99</span>
+              </div>
+            </div>
+            <div class="px-3">
               <p class="text-[#181411] text-base font-medium leading-normal">
-                Potato Chips
+                Lays
               </p>
               <p class="text-[#887563] text-sm font-normal leading-normal">
                 Classic flavor
               </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
             </div>
           </div>
           <div class="flex flex-col gap-3 pb-3">
@@ -181,14 +223,23 @@
               style="
                 background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBD_jLHRPO4J7_uT5vtrb06ncrt_5lWu6XJk0s4YCSXFa2eIoUCO2ew8D1JXoBFEioRDDLHfj2vFzPHScgBh_EUPxazsn87srNsnyiAbfOnTpdQQFHl5W6X_OLX_9draKlKYWPZT_sQQdFvVwBxfJTuDX0xJaGWsk7a2FkjANmzvnD4S_5zjwLm3WO_jBb98s4nYqGuphejwZfRh0j48XlTrUnLzi_9gagkB-mJyDrhT7Nld7WeeWDNa6UTOdjlgELwW6k_XayFvzVj');
               "
-            ></div>
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹3.49</span>
+              </div>
+            </div>
             <div>
               <p class="text-[#181411] text-base font-medium leading-normal">
-                Dark Chocolate Bar
+                Maggi
               </p>
               <p class="text-[#887563] text-sm font-normal leading-normal">
                 70% cocoa
               </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
             </div>
           </div>
           <div class="flex flex-col gap-3 pb-3">
@@ -197,24 +248,398 @@
               style="
                 background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGZBRq_tnbJNUOzxQxuoT81g0YNg27WYJKo6Ci-UKeKRoM_AWluKqium_n_97DMNGFhuHFoZCmrANX5zqW78dtST3rxnWgTpKikx5EUPn7mwZWZY4PnczEYZ3ZLKhxoLP6J-M2iosILxZ_eNLZzTFbR1g5iVUKX-VQ_ffhvH9hrS-LEovTDToUq59-Q4Vl2YmwihV4VJc9dcuc7awCYgfpT6ucUMRk2y6--rvGMalSldj5qVuBEXGpHnp_336Red8AfF37FOt9gGsv');
               "
-            ></div>
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹4.99</span>
+              </div>
+            </div>
             <div>
               <p class="text-[#181411] text-base font-medium leading-normal">
-                Trail Mix
+                cup noodles
               </p>
               <p class="text-[#887563] text-sm font-normal leading-normal">
                 Nuts and seeds
               </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491432711/bingo-original-style-chilli-sprinkled-potato-chips-52-g-product-images-o491432711-p491432711-0-202203150627.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">$1.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Bingo Chips
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Chilli Sprinkled
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491187257/parle-monaco-classic-regular-salted-crack-150-g-product-images-o491187257-p491187257-0-202203150534.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹2.49</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Monaco Biscuits
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Salted Crackers
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491419493/bingo-yumitos-original-style-salt-sprinkled-potato-chips-52-g-product-images-o491419493-p491419493-0-202203150627.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹1.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Bingo Yumitos
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Salt Sprinkled
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/490008739/britannia-good-day-cashew-cookies-200-g-product-images-o490008739-p490008739-0-202203150816.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹3.49</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Good Day
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Cashew Cookies
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491432710/bingo-original-style-cream-and-onion-potato-chips-52-g-product-images-o491432710-p491432710-0-202203150627.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹1.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Bingo Chips
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Cream & Onion
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491551493/parle-hide-seek-chocolate-chip-cookies-200-g-product-images-o491551493-p491551493-0-202203151515.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹2.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Hide & Seek
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Chocolate Chip Cookies
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/490008754/britannia-bourbon-chocolate-cream-biscuits-150-g-product-images-o490008754-p490008754-0-202203150748.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹1.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Bourbon
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Chocolate Cream
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/490008752/britannia-marie-gold-biscuits-250-g-product-images-o490008752-p490008752-0-202203150340.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹2.49</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Marie Gold
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Classic Biscuits
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491432655/sunfeast-dark-fantasy-bourbon-vanilla-cream-biscuits-150-g-product-images-o491432655-p491432655-0-202203151621.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹2.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Dark Fantasy
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Bourbon Vanilla
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/490005197/parle-g-original-glucose-biscuits-800-g-product-images-o490005197-p490005197-0-202203150432.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹1.49</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Parle-G
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Original Glucose
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/490008771/britannia-nutrichoice-digestive-high-fibre-biscuits-1-kg-product-images-o490008771-p490008771-0-202203150557.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹3.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Nutri Choice
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Digestive Biscuits
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/490008738/britannia-little-hearts-classic-sweet-n-salty-biscuits-75-g-product-images-o490008738-p490008738-0-202203150748.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹1.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Little Hearts
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Sweet & Salty
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="product-card flex flex-col gap-3 pb-3 rounded-xl bg-white relative cursor-pointer"
+          >
+            <div
+              class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl relative"
+              style="
+                background-image: url('https://www.jiomart.com/images/product/original/491187301/oreo-original-vanilla-creme-biscuits-300-g-product-images-o491187301-p491187301-0-202203151356.jpg');
+              "
+            >
+              <div class="price-tag">
+                <span class="font-bold text-[#181411]">₹2.99</span>
+              </div>
+            </div>
+            <div class="px-3">
+              <p class="text-[#181411] text-base font-medium leading-normal">
+                Oreo
+              </p>
+              <p class="text-[#887563] text-sm font-normal leading-normal">
+                Vanilla Creme
+              </p>
+              <button
+                class="mt-2 w-full bg-[#181411] text-white rounded-lg py-2 text-sm font-medium hover:bg-[#2a2522] transition-colors"
+              >
+                Add to Cart
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <div>
+      <div
+        class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t border-[#f4f2f0]"
+      >
         <div
           class="flex gap-2 border-t border-[#f4f2f0] bg-white px-4 pb-3 pt-2"
         >
           <a
-            class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-[#181411]"
+            class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-[#181411] hover:opacity-80 transition-opacity"
             href="#"
           >
             <div
@@ -242,7 +667,7 @@
             </p>
           </a>
           <a
-            class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#887563]"
+            class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#887563] hover:opacity-80 transition-opacity"
             href="#"
           >
             <div
@@ -270,7 +695,7 @@
             </p>
           </a>
           <a
-            class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#887563]"
+            class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#887563] hover:opacity-80 transition-opacity"
             href="#"
           >
             <div
@@ -298,7 +723,6 @@
             </p>
           </a>
         </div>
-        <div class="h-5 bg-white"></div>
       </div>
     </div>
   </body>
