@@ -7,6 +7,7 @@
     />
     <title>Confirm Order</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <style>
       .payment-method {
@@ -14,6 +15,13 @@
       }
       .payment-method:hover {
         background-color: #f8f9fa;
+      }
+      .float-label {
+        transform: translateY(-50%);
+        transition: all 0.2s ease;
+      }
+      .input-group:focus-within .float-label {
+        transform: translateY(-100%) scale(0.85);
       }
     </style>
   </head>
@@ -23,11 +31,13 @@
       style="font-family: 'Plus Jakarta Sans', sans-serif"
     >
       <!-- Header -->
-      <header class="sticky top-0 z-50 bg-white border-b border-gray-100">
+      <header
+        class="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100"
+      >
         <div class="flex items-center justify-between p-4">
           <button
             class="p-2 hover:bg-gray-100 rounded-full transition-colors"
-            onclick="history.back()"
+            onclick="window.location.href='index.html'"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -50,13 +60,59 @@
       </header>
 
       <main class="p-6 space-y-6">
+        <!-- Cart Summary -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-bold text-gray-900">Cart Summary</h2>
+          <div class="space-y-4">
+            <div
+              class="flex items-center gap-4 bg-white border border-gray-100 p-4 rounded-xl"
+            >
+              <div
+                class="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1613919113640-25732ec5e61f?w=400&q=80"
+                  alt="Chips"
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-gray-900 truncate">Chips</p>
+                <p class="text-sm text-gray-500">2 × $2.50</p>
+              </div>
+              <p class="font-medium text-gray-900">$5.00</p>
+            </div>
+
+            <div
+              class="flex items-center gap-4 bg-white border border-gray-100 p-4 rounded-xl"
+            >
+              <div
+                class="relative w-16 h-16 bg-gray-50 rounded-lg overflow-hidden"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=400&q=80"
+                  alt="Soda"
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-gray-900 truncate">Soda</p>
+                <p class="text-sm text-gray-500">1 × $1.50</p>
+              </div>
+              <p class="font-medium text-gray-900">$1.50</p>
+            </div>
+          </div>
+        </section>
+
         <!-- Order Summary -->
         <section class="space-y-4">
           <h2 class="text-lg font-bold text-gray-900">Order Summary</h2>
           <div class="bg-gray-50 rounded-xl p-4 space-y-3">
             <div class="flex justify-between">
               <span class="text-gray-600">Subtotal</span>
-              <span class="font-medium">$12.50</span>
+              <span class="font-medium">$6.50</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Delivery Fee</span>
@@ -65,7 +121,32 @@
             <div class="h-px bg-gray-200 my-2"></div>
             <div class="flex justify-between">
               <span class="font-medium text-gray-900">Total</span>
-              <span class="font-bold text-gray-900">$14.50</span>
+              <span class="font-bold text-gray-900">$8.50</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Delivery Details -->
+        <section class="space-y-4">
+          <h2 class="text-lg font-bold text-gray-900">Delivery Details</h2>
+          <div class="space-y-4">
+            <div class="input-group relative">
+              <input
+                type="text"
+                id="address"
+                placeholder="Delivery Address"
+                class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 p-4"
+                required
+              />
+            </div>
+            <div class="input-group relative">
+              <input
+                type="tel"
+                id="phone"
+                placeholder="Phone Number"
+                class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 p-4"
+                required
+              />
             </div>
           </div>
         </section>
@@ -73,43 +154,82 @@
         <!-- Payment Method -->
         <section class="space-y-4">
           <h2 class="text-lg font-bold text-gray-900">Payment Method</h2>
-          <div
-            class="payment-method bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4"
-          >
-            <div class="bg-blue-50 rounded-xl p-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-blue-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-            <div class="flex-1">
-              <h3 class="font-semibold text-gray-900">Cash on Delivery</h3>
-              <p class="text-sm text-gray-500">Please have $14.50 ready</p>
-            </div>
-            <div
-              class="h-5 w-5 rounded-full border-2 border-blue-600 flex items-center justify-center"
+          <div class="space-y-3">
+            <label
+              class="payment-method block bg-white border border-gray-200 rounded-xl p-4"
             >
-              <div class="h-3 w-3 rounded-full bg-blue-600"></div>
-            </div>
+              <div class="flex items-center gap-4">
+                <div class="bg-blue-50 rounded-xl p-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-gray-900">Cash on Delivery</h3>
+                  <p class="text-sm text-gray-500">Pay when you receive</p>
+                </div>
+                <input
+                  type="radio"
+                  name="payment"
+                  value="cash"
+                  class="h-5 w-5 text-blue-600"
+                  checked
+                />
+              </div>
+            </label>
+
+            <label
+              class="payment-method block bg-white border border-gray-200 rounded-xl p-4"
+            >
+              <div class="flex items-center gap-4">
+                <div class="bg-blue-50 rounded-xl p-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                    />
+                  </svg>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-semibold text-gray-900">Credit Card</h3>
+                  <p class="text-sm text-gray-500">Pay now with card</p>
+                </div>
+                <input
+                  type="radio"
+                  name="payment"
+                  value="card"
+                  class="h-5 w-5 text-blue-600"
+                />
+              </div>
+            </label>
           </div>
         </section>
 
-        <!-- Delivery Instructions -->
+        <!-- Notes -->
         <section class="space-y-4">
           <h2 class="text-lg font-bold text-gray-900">Delivery Instructions</h2>
           <textarea
             placeholder="Any special instructions for delivery? (Optional)"
-            class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] resize-none"
+            class="w-full rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] resize-none p-4"
           ></textarea>
         </section>
       </main>
@@ -121,12 +241,13 @@
         <div class="flex items-center gap-4">
           <div class="flex-1">
             <p class="text-sm text-gray-600">Total Amount</p>
-            <p class="text-xl font-bold text-gray-900">$14.50</p>
+            <p class="text-xl font-bold text-gray-900">$8.50</p>
           </div>
           <button
+            onclick="window.location.href='0rder.html'"
             class="bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
           >
-            Confirm Order
+            Place Order
           </button>
         </div>
       </footer>
