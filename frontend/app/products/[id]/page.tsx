@@ -36,7 +36,12 @@ const ProductDetailPage = () => {
 
   const { user: authUser, isLoading: authIsLoading } = useAuth();
   const { addToCart } = useCart();
-  const { addToWishlist, isWishlisted, removeFromWishlist } = useWishlist();
+  const {
+    addToWishlist,
+    isWishlisted,
+    removeFromWishlist,
+    isLoading: wishlistIsLoading // Get isLoading state from WishlistContext
+  } = useWishlist();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -97,14 +102,15 @@ const ProductDetailPage = () => {
     }
   };
 
-  const handleToggleWishlist = () => {
-    if (!product) return;
-    if (isWishlisted(product.id.toString())) { // Assuming product.id is number, isWishlisted might expect string
-        removeFromWishlist(product.id.toString());
-        alert(`${product.name} removed from wishlist!`);
+  const handleToggleWishlist = async () => { // Made async to align with context methods
+    if (!product || wishlistIsLoading) return; // Prevent action if product not loaded or wishlist is processing
+
+    if (isWishlisted(product.id)) { // Use product.id directly (number)
+        await removeFromWishlist(product.id);
+        // Feedback is in context, or add alert if preferred
     } else {
-        addToWishlist(product);
-        alert(`${product.name} added to wishlist!`);
+        await addToWishlist(product);
+        // Feedback is in context, or add alert if preferred
     }
   };
 
@@ -208,11 +214,18 @@ const ProductDetailPage = () => {
             </button>
             <button
               onClick={handleToggleWishlist}
+              disabled={wishlistIsLoading || !product} // Disable if wishlist is loading or no product
               className={`${
-                isWishlisted(product.id.toString()) ? 'bg-pink-500 hover:bg-pink-600' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'
-              } text-white font-semibold py-3 px-6 rounded-lg shadow-md transition duration-150 ease-in-out flex-grow`}
+                isWishlisted(product.id)
+                  ? 'bg-red-500 hover:bg-red-600 text-white' // Consistent with ProductCard's remove color
+                  : 'bg-pink-500 hover:bg-pink-600 text-white' // Consistent with ProductCard's add color
+              } font-semibold py-3 px-6 rounded-lg shadow-md transition duration-150 ease-in-out flex-grow disabled:opacity-50`}
             >
-              {isWishlisted(product.id.toString()) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              {wishlistIsLoading
+                ? 'Processing...'
+                : isWishlisted(product.id)
+                  ? 'Remove from Wishlist'
+                  : 'Add to Wishlist'}
             </button>
           </div>
         </div>

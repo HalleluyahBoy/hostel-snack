@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useCart } from '../contexts/CartContext'; // Assuming path to CartContext
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext'; // Added import
 
 // Define the expected shape of the product prop
 interface Product {
@@ -25,17 +26,35 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const {
+    addToWishlist,
+    removeFromWishlist,
+    isWishlisted,
+    isLoading: wishlistIsLoading // Renamed to avoid conflict if CartContext had isLoading
+  } = useWishlist();
+
   const stockStatus = product.is_in_stock ?? (product.stock && product.stock > 0);
   const stockText = stockStatus ? "In Stock" : "Out of Stock";
   const stockColor = stockStatus ? "text-green-600" : "text-red-600";
 
   const handleAddToCart = () => {
-    // The Product type in CartContext might be slightly different, adjust if necessary
-    // For example, if CartContext's Product type doesn't have all fields from this ProductCard's Product type.
-    // Assuming they are compatible enough or CartContext's Product is a subset.
-    addToCart(product, 1); // Adding 1 unit by default from product card
-    alert(`${product.name} added to cart!`); // Simple feedback
+    addToCart(product, 1);
+    alert(`${product.name} added to cart!`);
   };
+
+  const handleToggleWishlist = async () => {
+    if (wishlistIsLoading) return; // Prevent action if wishlist is currently processing
+
+    if (isWishlisted(product.id)) {
+      await removeFromWishlist(product.id);
+      // Feedback is in context, or add alert("Removed from wishlist!");
+    } else {
+      await addToWishlist(product);
+      // Feedback is in context, or add alert("Added to wishlist!");
+    }
+  };
+
+  const productIsWishlisted = isWishlisted(product.id);
 
   return (
     <div className="group bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col">
@@ -75,15 +94,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <button
             className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-sm py-2 px-3 rounded-md transition duration-150 ease-in-out disabled:opacity-50"
             onClick={handleAddToCart}
-            disabled={!stockStatus} // Disable if out of stock
+            disabled={!stockStatus || wishlistIsLoading} // Disable if out of stock or wishlist is loading
           >
             {stockStatus ? 'Add to Cart' : 'Out of Stock'}
           </button>
           <button
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white text-sm py-2 px-3 rounded-md transition duration-150 ease-in-out"
-            onClick={() => console.log(`Add to wishlist: ${product.name}`)} // Placeholder for now
+            className={`w-full text-sm py-2 px-3 rounded-md transition duration-150 ease-in-out ${
+              productIsWishlisted
+                ? 'bg-red-500 hover:bg-red-600 text-white'
+                : 'bg-pink-500 hover:bg-pink-600 text-white'
+            } disabled:opacity-50`}
+            onClick={handleToggleWishlist}
+            disabled={wishlistIsLoading}
           >
-            Add to Wishlist
+            {wishlistIsLoading
+              ? 'Processing...'
+              : productIsWishlisted
+                ? 'Remove from Wishlist'
+                : 'Add to Wishlist'}
           </button>
         </div>
       </div>
