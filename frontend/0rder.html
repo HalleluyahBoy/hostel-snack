@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
@@ -21,25 +22,45 @@
       }
       @keyframes scaleIn {
         0% {
-          transform: scale(0.8);
+          transform: scale(0.8) translateY(20px);
           opacity: 0;
         }
         100% {
-          transform: scale(1);
+          transform: scale(1) translateY(0);
           opacity: 1;
         }
       }
       .fade-in {
         animation: fadeIn 0.5s ease-out;
+        animation-fill-mode: both;
       }
       @keyframes fadeIn {
         0% {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(20px);
         }
         100% {
           opacity: 1;
           transform: translateY(0);
+        }
+      }
+      .slide-in {
+        opacity: 0;
+        animation: slideIn 0.5s ease-out forwards;
+      }
+      @keyframes slideIn {
+        0% {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @media print {
+        .no-print {
+          display: none !important;
         }
       }
     </style>
@@ -52,7 +73,7 @@
       <div class="bg-white">
         <!-- Header -->
         <div
-          class="flex items-center p-4 pb-2 justify-between border-b border-gray-100"
+          class="flex items-center p-4 pb-2 justify-between border-b border-gray-100 no-print"
         >
           <button
             class="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -99,109 +120,109 @@
           </div>
           <h2 class="text-3xl font-bold text-gray-900">Order Placed!</h2>
           <p class="text-gray-600 text-base leading-relaxed max-w-sm mx-auto">
-            Thank you for your order! We're getting it ready for you.
+            Thank you for your order! We'll notify you once it's ready.
           </p>
         </div>
 
         <!-- Order Details -->
-        <div class="px-6 space-y-8 fade-in">
+        <div id="order-details" class="px-6 space-y-8">
           <!-- Order Info -->
-          <section class="space-y-4">
+          <section class="space-y-4 fade-in" style="animation-delay: 0.2s">
             <h3 class="text-lg font-bold text-gray-900">Order Information</h3>
             <div class="bg-gray-50 rounded-xl p-4 space-y-3">
               <div class="grid grid-cols-2 gap-2">
                 <p class="text-gray-600">Order Number</p>
-                <p class="text-gray-900 font-medium text-right">#123456789</p>
+                <p
+                  id="order-id"
+                  class="text-gray-900 font-medium text-right"
+                ></p>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <p class="text-gray-600">Order Date</p>
-                <p class="text-gray-900 font-medium text-right">June 9, 2025</p>
+                <p
+                  id="order-date"
+                  class="text-gray-900 font-medium text-right"
+                ></p>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <p class="text-gray-600">Delivery To</p>
-                <p class="text-gray-900 font-medium text-right">
-                  Hostel Reception, Room 201
-                </p>
+                <p
+                  id="delivery-address"
+                  class="text-gray-900 font-medium text-right"
+                ></p>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <p class="text-gray-600">Contact</p>
+                <p
+                  id="contact-info"
+                  class="text-gray-900 font-medium text-right"
+                ></p>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <p class="text-gray-600">Payment Method</p>
-                <p class="text-gray-900 font-medium text-right">
-                  Cash on Delivery
-                </p>
+                <p
+                  id="payment-method"
+                  class="text-gray-900 font-medium text-right"
+                ></p>
               </div>
             </div>
           </section>
 
           <!-- Order Items -->
-          <section class="space-y-4">
+          <section class="space-y-4 fade-in" style="animation-delay: 0.3s">
             <h3 class="text-lg font-bold text-gray-900">Order Items</h3>
-            <div class="space-y-3">
-              <div
-                class="order-item flex items-center gap-4 bg-gray-50 p-4 rounded-xl"
-              >
-                <div
-                  class="relative bg-white rounded-lg w-16 h-16 p-2 shadow-sm"
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1613919113640-25732ec5e61f?w=400&q=80"
-                    alt="Chips"
-                    class="w-full h-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-medium text-gray-900">Chips</p>
-                  <p class="text-sm text-gray-500">2 × $2.50</p>
-                </div>
-                <p class="font-medium text-gray-900">$5.00</p>
-              </div>
-
-              <div
-                class="order-item flex items-center gap-4 bg-gray-50 p-4 rounded-xl"
-              >
-                <div
-                  class="relative bg-white rounded-lg w-16 h-16 p-2 shadow-sm"
-                >
-                  <img
-                    src="https://images.unsplash.com/photo-1625772299848-391b6a87d7b3?w=400&q=80"
-                    alt="Soda"
-                    class="w-full h-full object-contain"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="font-medium text-gray-900">Soda</p>
-                  <p class="text-sm text-gray-500">1 × $1.50</p>
-                </div>
-                <p class="font-medium text-gray-900">$1.50</p>
-              </div>
+            <div id="order-items" class="space-y-3">
+              <!-- Order items will be dynamically inserted here -->
             </div>
           </section>
 
           <!-- Order Total -->
-          <section class="space-y-4">
+          <section class="space-y-4 fade-in" style="animation-delay: 0.4s">
             <h3 class="text-lg font-bold text-gray-900">Order Total</h3>
             <div class="bg-gray-50 rounded-xl p-4 space-y-3">
               <div class="flex justify-between">
                 <span class="text-gray-600">Subtotal</span>
-                <span class="font-medium text-gray-900">$6.50</span>
+                <span id="subtotal" class="font-medium text-gray-900"
+                  >₹0.00</span
+                >
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Tax (5%)</span>
+                <span id="tax" class="font-medium text-gray-900">₹0.00</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Delivery Fee</span>
-                <span class="font-medium text-gray-900">$2.00</span>
+                <span class="font-medium text-green-600">Free</span>
               </div>
               <div class="h-px bg-gray-200 my-2"></div>
               <div class="flex justify-between">
                 <span class="font-medium text-gray-900">Total</span>
-                <span class="font-bold text-gray-900">$8.50</span>
+                <span id="total" class="font-bold text-gray-900">₹0.00</span>
               </div>
+            </div>
+          </section>
+
+          <!-- Notes -->
+          <section
+            id="notes-section"
+            class="space-y-4 fade-in hidden"
+            style="animation-delay: 0.5s"
+          >
+            <h3 class="text-lg font-bold text-gray-900">
+              Delivery Instructions
+            </h3>
+            <div class="bg-gray-50 rounded-xl p-4">
+              <p id="delivery-notes" class="text-gray-600"></p>
             </div>
           </section>
         </div>
       </div>
 
       <!-- Sticky Footer -->
-      <div class="sticky bottom-0 bg-white border-t border-gray-100 mt-8">
+      <div
+        class="sticky bottom-0 bg-white border-t border-gray-100 mt-8 no-print fade-in"
+        style="animation-delay: 0.6s"
+      >
         <div class="max-w-2xl mx-auto p-4">
           <div class="flex flex-col gap-3">
             <button
@@ -211,7 +232,7 @@
               Continue Shopping
             </button>
             <button
-              onclick="window.print()"
+              onclick="downloadReceipt()"
               class="w-full bg-gray-100 text-gray-700 font-bold py-4 px-6 rounded-xl hover:bg-gray-200 transition-all duration-200"
             >
               Download Receipt
@@ -220,5 +241,106 @@
         </div>
       </div>
     </div>
+
+    <script>
+      // Get order details from localStorage
+      const confirmedOrder = JSON.parse(localStorage.getItem("confirmedOrder"));
+
+      if (!confirmedOrder) {
+        window.location.href = "index.html";
+      }
+
+      function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      function updateOrderDisplay() {
+        // Update order information
+        document.getElementById("order-id").textContent =
+          confirmedOrder.orderId;
+        document.getElementById("order-date").textContent = formatDate(
+          confirmedOrder.orderDate
+        );
+        document.getElementById("delivery-address").textContent =
+          confirmedOrder.customerDetails.address;
+        document.getElementById("contact-info").textContent =
+          confirmedOrder.customerDetails.phone;
+        document.getElementById("payment-method").textContent =
+          confirmedOrder.paymentMethod === "cash"
+            ? "Cash on Delivery"
+            : "Credit Card";
+
+        // Update order items
+        const orderItemsContainer = document.getElementById("order-items");
+        orderItemsContainer.innerHTML = "";
+
+        confirmedOrder.items.forEach((item) => {
+          const itemElement = document.createElement("div");
+          itemElement.className =
+            "order-item flex items-center gap-4 bg-gray-50 p-4 rounded-xl";
+          itemElement.innerHTML = `
+            <div class="relative bg-white rounded-lg w-16 h-16 p-2 shadow-sm">
+              <img src="${item.image}" alt="${
+            item.name
+          }" class="w-full h-full object-contain" loading="lazy">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-gray-900">${item.name}</p>
+              <p class="text-sm text-gray-500">${
+                item.quantity
+              } × ₹${item.price.toFixed(2)}</p>
+            </div>
+            <p class="font-medium text-gray-900">₹${(
+              item.price * item.quantity
+            ).toFixed(2)}</p>
+          `;
+          orderItemsContainer.appendChild(itemElement);
+        });
+
+        // Update totals
+        document.getElementById(
+          "subtotal"
+        ).textContent = `₹${confirmedOrder.subtotal.toFixed(2)}`;
+        document.getElementById(
+          "tax"
+        ).textContent = `₹${confirmedOrder.tax.toFixed(2)}`;
+        document.getElementById(
+          "total"
+        ).textContent = `₹${confirmedOrder.total.toFixed(2)}`;
+
+        // Show notes if they exist
+        if (confirmedOrder.customerDetails.notes) {
+          document.getElementById("notes-section").classList.remove("hidden");
+          document.getElementById("delivery-notes").textContent =
+            confirmedOrder.customerDetails.notes;
+        }
+      }
+
+      function downloadReceipt() {
+        const printTitle = document.title;
+        document.title = `Receipt-${confirmedOrder.orderId}`;
+        window.print();
+        document.title = printTitle;
+      }
+
+      // Initialize the display
+      updateOrderDisplay();
+
+      // Add keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          window.location.href = "index.html";
+        } else if (e.key === "p" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          downloadReceipt();
+        }
+      });
+    </script>
   </body>
 </html>

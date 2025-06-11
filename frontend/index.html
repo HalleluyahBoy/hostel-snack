@@ -1,6 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;700;800"
@@ -8,39 +11,7 @@
     <title>Snacks Store</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <style>
-      .product-card {
-        transition: all 0.3s ease;
-        background: white;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-      }
-      .product-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
-      }
-      .category-pill {
-        transition: all 0.2s ease;
-      }
-      .category-pill:hover {
-        background: #e5e7eb;
-        transform: translateY(-1px);
-      }
-      .cart-badge {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        background: #ef4444;
-        color: white;
-        border-radius: 999px;
-        padding: 2px 6px;
-        font-size: 12px;
-        font-weight: 600;
-      }
-      .search-input {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(8px);
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="bg-gray-50">
     <div
@@ -54,11 +25,15 @@
         <div class="max-w-7xl mx-auto px-4">
           <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
-              <h1 class="text-xl font-bold text-gray-900">Snacks Store</h1>
+              <a href="index.html" class="text-xl font-bold text-gray-900"
+                >Snacks Store</a
+              >
             </div>
-            <div class="flex items-center gap-6">
-              <button
+            <div id="user-button" class="flex items-center gap-6">
+              <a
+                href="cart.html"
                 class="relative p-2 hover:bg-gray-100 rounded-full transition"
+                aria-label="Shopping Cart"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -74,35 +49,125 @@
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-                <span class="cart-badge">3</span>
+                <span id="cart-badge" class="cart-badge">0</span>
+              </a>
+              <button
+                id="profile-button"
+                class="p-2 hover:bg-gray-100 rounded-full transition relative hidden"
+                aria-label="User Profile"
+              >
+                <img
+                  id="profile-image"
+                  src="https://via.placeholder.com/32"
+                  alt="Profile"
+                  class="w-8 h-8 rounded-full object-cover"
+                />
               </button>
-              <button class="p-2 hover:bg-gray-100 rounded-full transition">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </button>
+              <div
+                id="user-menu"
+                class="user-menu hidden absolute right-0 mt-12 w-56 bg-white rounded-lg shadow-lg py-1 z-50"
+              >
+                <div id="guest-menu">
+                  <button
+                    class="user-menu-item w-full"
+                    onclick="showAuthModal('login')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Login
+                  </button>
+                  <button
+                    class="user-menu-item w-full"
+                    onclick="showAuthModal('register')"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    Register
+                  </button>
+                </div>
+                <div id="user-menu-authenticated" class="hidden">
+                  <div class="px-4 py-3 border-b border-gray-100">
+                    <p
+                      id="user-name"
+                      class="text-sm font-medium text-gray-900"
+                    ></p>
+                    <p class="text-sm text-gray-500 mt-1">View your account</p>
+                  </div>
+                  <a href="orders.html" class="user-menu-item">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                      />
+                    </svg>
+                    My Orders
+                  </a>
+                  <button
+                    onclick="logout()"
+                    class="user-menu-item w-full text-left text-red-600 hover:bg-red-50"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Logout
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
-      <!-- Search -->
+      <!-- Search and Categories -->
       <div class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Search Bar -->
         <div class="relative">
           <input
-            id="search-input"
             type="text"
+            id="search-input"
             placeholder="Search for snacks..."
             class="w-full h-12 pl-12 pr-4 rounded-xl border border-gray-200 search-input focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
           />
@@ -121,100 +186,487 @@
             />
           </svg>
         </div>
-      </div>
 
-      <!-- Categories -->
-      <div class="max-w-7xl mx-auto px-4 pb-6">
-        <div
-          id="categories-container"
-          class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide"
-        >
-          <!-- Categories will be loaded dynamically -->
+        <!-- Categories -->
+        <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+          <button
+            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap bg-blue-50 border-blue-200"
+            data-category="all"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-yellow-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+              />
+            </svg>
+            <span>All Snacks</span>
+          </button>
+          <button
+            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
+            data-category="chips"
+          >
+            <span>Chips & Crisps</span>
+          </button>
+          <button
+            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
+            data-category="chocolates"
+          >
+            <span>Chocolates</span>
+          </button>
+          <button
+            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
+            data-category="biscuits"
+          >
+            <span>Biscuits</span>
+          </button>
+          <button
+            class="category-pill flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-gray-200 whitespace-nowrap"
+            data-category="healthy"
+          >
+            <span>Healthy Snacks</span>
+          </button>
         </div>
       </div>
 
       <!-- Products Grid -->
       <div class="max-w-7xl mx-auto px-4 pb-24">
-        <!-- Loading indicator -->
-        <div id="loading" class="text-center py-8">
-          <div class="inline-flex items-center gap-2">
-            <svg
-              class="animate-spin h-5 w-5 text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <span class="text-gray-600">Loading products...</span>
-          </div>
-        </div>
-
-        <!-- Error message -->
-        <div id="error" class="hidden text-center py-8">
-          <div class="text-red-600">
-            <svg
-              class="h-8 w-8 mx-auto mb-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <p>Failed to load products. Please try again later.</p>
-          </div>
-        </div>
-
-        <!-- Products grid container -->
         <div
-          id="products-grid"
-          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 hidden"
+          class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
         >
-          <!-- Product cards will be inserted here dynamically -->
-        </div>
-
-        <!-- No products message -->
-        <div id="no-products" class="hidden text-center py-8">
-          <div class="text-gray-500">
-            <svg
-              class="h-8 w-8 mx-auto mb-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m13-4h-2m-5-4h2m-3-2h2"
+          <!-- Product Cards -->
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491432711/bingo-original-style-chilli-sprinkled-potato-chips-52-g-product-images-o491432711-p491432711-0-202203150627.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Bingo Chips"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
               />
-            </svg>
-            <p>No products found.</p>
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹1.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Bingo Chips
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Chilli Sprinkled
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491187257/parle-monaco-classic-regular-salted-crack-150-g-product-images-o491187257-p491187257-0-202203150534.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Monaco Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹2.49</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Monaco Biscuits
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Salted Crackers
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491419493/bingo-yumitos-original-style-salt-sprinkled-potato-chips-52-g-product-images-o491419493-p491419493-0-202203150627.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Bingo Yumitos"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹1.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Bingo Yumitos
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Salt Sprinkled
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/490008739/britannia-good-day-cashew-cookies-200-g-product-images-o490008739-p490008739-0-202203150816.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Good Day Cookies"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹3.49</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">Good Day</h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Cashew Cookies
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491432710/bingo-original-style-cream-and-onion-potato-chips-52-g-product-images-o491432710-p491432710-0-202203150627.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Bingo Chips Cream & Onion"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹1.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Bingo Chips
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Cream & Onion
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491551493/parle-hide-seek-chocolate-chip-cookies-200-g-product-images-o491551493-p491551493-0-202203151515.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Hide & Seek Cookies"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹2.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Hide & Seek
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Chocolate Chip Cookies
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/490008754/britannia-bourbon-chocolate-cream-biscuits-150-g-product-images-o490008754-p490008754-0-202203150748.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Bourbon Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹1.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">Bourbon</h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Chocolate Cream
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/490008752/britannia-marie-gold-biscuits-250-g-product-images-o490008752-p490008752-0-202203150340.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Marie Gold Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹2.49</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Marie Gold
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Classic Biscuits
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491432655/sunfeast-dark-fantasy-bourbon-vanilla-cream-biscuits-150-g-product-images-o491432655-p491432655-0-202203151621.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Dark Fantasy Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹2.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Dark Fantasy
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Bourbon Vanilla
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/490005197/parle-g-original-glucose-biscuits-800-g-product-images-o490005197-p490005197-0-202203150432.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Parle-G Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹1.49</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">Parle-G</h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Original Glucose
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/490008771/britannia-nutrichoice-digestive-high-fibre-biscuits-1-kg-product-images-o490008771-p490008771-0-202203150557.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Nutri Choice Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹3.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Nutri Choice
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Digestive Biscuits
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/490008738/britannia-little-hearts-classic-sweet-n-salty-biscuits-75-g-product-images-o490008738-p490008738-0-202203150748.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Little Hearts Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹1.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">
+                Little Hearts
+              </h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Sweet & Salty
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+
+          <div class="product-card rounded-xl overflow-hidden">
+            <div class="aspect-square relative overflow-hidden bg-gray-50">
+              <img
+                src="https://www.jiomart.com/images/product/original/491187301/oreo-original-vanilla-creme-biscuits-300-g-product-images-o491187301-p491187301-0-202203151356.jpg"
+                class="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                alt="Oreo Biscuits"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/400x400?text=Snack+Image'"
+              />
+              <div
+                class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg shadow-sm"
+              >
+                <span class="font-semibold">₹2.99</span>
+              </div>
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+            </div>
+            <div class="p-4">
+              <h3 class="font-semibold text-gray-900 line-clamp-1">Oreo</h3>
+              <p class="text-sm text-gray-500 mt-1 line-clamp-1">
+                Vanilla Creme
+              </p>
+              <button
+                class="w-full mt-4 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition group-hover:bg-blue-700"
+              >
+                Add to Cart
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Floating Cart Button -->
       <div class="fixed bottom-6 right-6">
-        <button
-          class="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        <a
+          href="cart.html"
+          class="bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+          aria-label="View Cart"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -230,11 +682,150 @@
               d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
             />
           </svg>
-        </button>
+          <span
+            id="floating-cart-count"
+            class="bg-white text-blue-600 px-2 py-1 rounded-full text-sm font-semibold"
+            >0</span
+          >
+        </a>
       </div>
     </div>
 
-    <!-- Include JavaScript -->
-    <script src="script.js"></script>
+    <script>
+      // Initialize cart from localStorage or empty array
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Update cart badge count
+      function updateCartCount() {
+        const count = cart.reduce((total, item) => total + item.quantity, 0);
+        document.getElementById("cart-badge").textContent = count.toString();
+        document.getElementById("floating-cart-count").textContent =
+          count.toString();
+      }
+
+      // Add item to cart with animation
+      function addToCart(product) {
+        const existingItem = cart.find((item) => item.name === product.name);
+
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({
+            ...product,
+            quantity: 1,
+          });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+
+        // Show success feedback with animation
+        const button = event.target;
+        const originalText = button.textContent;
+        button.innerHTML = `
+          <span class="flex items-center justify-center">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Added
+          </span>
+        `;
+        button.disabled = true;
+        button.classList.add("bg-green-600");
+
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.disabled = false;
+          button.classList.remove("bg-green-600");
+        }, 1000);
+      }
+
+      // Initialize product data
+      document.querySelectorAll(".product-card").forEach((card) => {
+        const button = card.querySelector("button");
+        if (button) {
+          button.addEventListener("click", () => {
+            const product = {
+              name: card.querySelector("h3").textContent,
+              description: card.querySelector("p").textContent,
+              price: parseFloat(
+                card
+                  .querySelector(".font-semibold")
+                  .textContent.replace("₹", "")
+              ),
+              image: card.querySelector("img").src,
+            };
+            addToCart(product);
+          });
+        }
+      });
+
+      // Add search functionality with debounce
+      const searchInput = document.getElementById("search-input");
+      let searchTimeout;
+
+      searchInput.addEventListener("input", (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          const searchTerm = e.target.value.toLowerCase();
+          document.querySelectorAll(".product-card").forEach((card) => {
+            const title = card.querySelector("h3").textContent.toLowerCase();
+            const description = card
+              .querySelector("p")
+              .textContent.toLowerCase();
+            const shouldShow =
+              title.includes(searchTerm) || description.includes(searchTerm);
+            card.style.display = shouldShow ? "block" : "none";
+          });
+        }, 300);
+      });
+
+      // Add category filter functionality
+      document.querySelectorAll(".category-pill").forEach((pill) => {
+        pill.addEventListener("click", () => {
+          const category = pill.getAttribute("data-category");
+          document.querySelectorAll(".category-pill").forEach((p) => {
+            p.classList.remove("bg-blue-50", "border-blue-200");
+          });
+          pill.classList.add("bg-blue-50", "border-blue-200");
+
+          document.querySelectorAll(".product-card").forEach((card) => {
+            if (category === "all") {
+              card.style.display = "block";
+              return;
+            }
+
+            const description = card
+              .querySelector("p")
+              .textContent.toLowerCase();
+            const title = card.querySelector("h3").textContent.toLowerCase();
+            const shouldShow =
+              description.includes(category) || title.includes(category);
+
+            if (shouldShow) {
+              card.style.display = "block";
+              card.classList.add("fade-in");
+            } else {
+              card.style.display = "none";
+              card.classList.remove("fade-in");
+            }
+          });
+        });
+      });
+
+      // Initialize cart count
+      updateCartCount();
+
+      // Add keyboard shortcuts
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/") {
+          e.preventDefault();
+          searchInput.focus();
+        } else if (e.key === "c" && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          window.location.href = "cart.html";
+        }
+      });
+    </script>
   </body>
 </html>
