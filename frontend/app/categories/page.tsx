@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import apiClient from '../../lib/axiosConfig'; // Adjusted path
-import CategoryCard from '../../components/CategoryCard'; // Adjusted path
+import { useState, useEffect } from "react";
+import apiClient from "../lib/axiosConfig"; // Adjusted path
+import CategoryCard from "../components/CategoryCard"; // Adjusted path
 
 interface Category {
   id: number; // Or string
@@ -25,11 +25,13 @@ const CategoriesPage = () => {
         // And it returns an array of category objects
         // If the API returns data in a nested property (e.g., { results: [...] }),
         // you'll need to adjust response.data accordingly (e.g., response.data.results)
-        const response = await apiClient.get<Category[]>('/categories/');
+        const response = await apiClient.get<Category[]>("/categories/");
         setCategories(response.data);
       } catch (err: any) {
         console.error("Error fetching categories:", err);
-        setError(err.message || 'Failed to fetch categories. Please try again later.');
+        setError(
+          err.message || "Failed to fetch categories. Please try again later."
+        );
       } finally {
         setLoading(false);
       }
@@ -58,7 +60,9 @@ const CategoriesPage = () => {
     return (
       <div className="container mx-auto p-4 text-center">
         <h1 className="text-3xl font-bold my-8">Our Categories</h1>
-        <p className="text-lg text-gray-700">No categories found at the moment.</p>
+        <p className="text-lg text-gray-700">
+          No categories found at the moment.
+        </p>
       </div>
     );
   }
@@ -69,7 +73,7 @@ const CategoriesPage = () => {
         Our Categories
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {categories.map(category => (
+        {categories.map((category) => (
           <CategoryCard key={category.id} category={category} />
         ))}
       </div>
